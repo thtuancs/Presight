@@ -30,7 +30,7 @@ class TextTranslator():
     
 if __name__ == "__main__":
     api_key = input("Input api key: ")
-    os.environ["OPENAI_API_KEY"]
+    os.environ["OPENAI_API_KEY"] = api_key
     translator = TextTranslator(api_key)
     
     # test single text
