@@ -1,7 +1,7 @@
 import os
 import openai
 import json
-from llama_index import StorageContext, load_index_from_storage
+from llama_index import StorageContext, load_index_from_storage, ServiceContext
 import utils
 from llama_index.indices.postprocessor import SentenceEmbeddingOptimizer
 
@@ -41,15 +41,16 @@ class Chatbot:
 if __name__ == "__main__":
     api_key = input("Enter api key:")
     os.environ["OPENAI_API_KEY"] = api_key
+    
     storage_context = StorageContext.from_defaults(persist_dir='Index')
     index = load_index_from_storage(storage_context)
-    bot = Chatbot(api_key, index=index)
+    bot = Chatbot(api_key, index=index, use_optimizer=True)
     bot.load_chat_history("chat_history.json")
     
     # # Evaluate response time
-    # with open('generated_question.json') as file:
-    #     questions = json.load(file)["questions"]
-    # utils.evaluate(chatbot=bot, questions=questions)
+    with open('generated_question.json') as file:
+        questions = json.load(file)["questions"]
+    utils.evaluate(chatbot=bot, questions=questions)
     
     while True:
         user_input = input("You: ")

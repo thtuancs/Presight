@@ -46,18 +46,26 @@ def generate_questions(url='https://www.presight.io/privacy-policy.html', filepa
 
     return data
 
-def evaluate(chatbot, questions, sleep_time=5):
+def evaluate(chatbot, questions, sleep_time=2):
     random.shuffle(questions)
-    num_question = len(questions)
-    start_time = time.time()
+    all_response_time = []
+    total_time = 0
     for i, question in enumerate(questions):
+        start_time = time.time()
         print(f"User: {question}")
         response = chatbot.generate_response(question)
         print(f"Bot: {response['content']}")
-        time.sleep(sleep_time)
         end_time = time.time()
-        total_time = end_time - start_time - (i+1)*sleep_time
+        response_time = end_time - start_time
+        all_response_time.append(response_time)
+        total_time += response_time
         print(f"Evaluated on {i+1} questions, average response time {round(total_time/(i+1), 4)}")
+        time.sleep(sleep_time)
+    
+    import numpy as np
+    all_response_time = np.array(all_response_time)
+    print("Average response time:", all_response_time.mean())
+    print("Response time std:", all_response_time.std())
     
 if __name__ == "__main__":
     api_key = input("Enter api key:")
